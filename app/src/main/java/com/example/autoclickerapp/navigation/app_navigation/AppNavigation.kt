@@ -1,5 +1,6 @@
 package com.example.autoclickerapp.navigation.app_navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -21,29 +22,32 @@ import com.example.autoclickerapp.view.user_view.SignUpScreen
 import com.example.autoclickerapp.view.user_view.UserProfileScreen
 import com.example.autoclickerapp.view.user_view.HomeScreen
 
+
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier,
     startDestination: String,
     navController: NavHostController,
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
+    println("Current route: $currentRoute")
 
     val bottomNavItems = listOf(
         BottomNavItem("Home", R.drawable.home_ic),
         BottomNavItem("Profile", R.drawable.person_ic),
     )
+
     val selectedItemIndex = when {
-        currentRoute?.startsWith(Screen.Home.route) == true -> 0
-        currentRoute?.startsWith(Screen.UserProfile.route) == true -> 1
-        else -> 0
+        currentRoute?.contains(Screen.Home.route) == true -> 0
+        currentRoute?.contains(Screen.UserProfile.route) == true -> 1
+        else -> -1 // No selection for other screens
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            if (currentRoute == Screen.Home.route || currentRoute == Screen.UserProfile.route) {
+            // Show bottom navigation only on Home and UserProfile screens
+            if (currentRoute?.contains(Screen.Home.route) == true || currentRoute?.contains(Screen.UserProfile.route) == true) {
                 BottomNavigationBar(
                     items = bottomNavItems,
                     selectedItem = selectedItemIndex,
@@ -53,6 +57,7 @@ fun AppNavigation(
                             1 -> Screen.UserProfile.route
                             else -> Screen.Home.route
                         }
+                        // Navigate to the selected route
                         navController.navigate(route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 inclusive = false
@@ -74,20 +79,69 @@ fun AppNavigation(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            composable(Screen.Login.route) { LoginScreen(modifier = Modifier.fillMaxSize()) }
-            composable(Screen.Home.route) { HomeScreen(modifier = Modifier.fillMaxSize()) }
-            composable(Screen.OnBoarding.route) {
-                OnBoardingScreen(
-                    modifier = Modifier.fillMaxSize(),
+            // Login Screen
+            composable("login_screen/{role}") { backStackEntry ->
+                // Get the role parameter from the backStackEntry arguments
+                val role = backStackEntry.arguments?.getString("role")?.toIntOrNull() ?: 2
+
+                // Navigate to LoginScreen, passing the role
+                LoginScreen(
                     navController = navController,
-                    onRoleClickBoarding = { role ->
-                        navController.navigate(Screen.SignUp.createRoute(role))
+                    role = role,
+                    onNavigateToOnBoarding = {
+                        navController.navigate(Screen.OnBoarding.route)
                     },
-                    onNavigateToLogin = { navController.navigate(Screen.Login.route) },
+                    onLoginClick = { role ->
+                        // Navigate to HomeScreen with the role parameter
+                        navController.navigate(Screen.Home.chooseRole(role)) {
+                            // Optionally clear the back stack if necessary
+                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
-            composable(Screen.SignUp.route) { SignUpScreen(modifier = Modifier.fillMaxSize()) }
-            composable(Screen.UserProfile.route) { UserProfileScreen(modifier = Modifier.fillMaxSize()) }
+
+            // Home Screen
+            composable("home_screen/{role}") { backStackEntry ->
+                val role = backStackEntry.arguments?.getString("role")?.toIntOrNull() ?: 2
+                HomeScreen(navController = navController, role = role)
+            }
+            // OnBoarding Screen
+            composable(Screen.OnBoarding.route) {
+                OnBoardingScreen(
+                    modifier = Modifier,
+                    navController = navController,
+                    onLoginClick = { role ->
+                        navController.navigate(Screen.Login.chooseRole(role))
+                    },
+                    onNavigateToSignUp = {
+                        Log.d("Navigation", "Navigating to SignUp")
+                        navController.navigate(Screen.SignUp.route) {
+                            popUpTo(Screen.OnBoarding.route) { inclusive = false }
+                        }
+                    },
+                )
+            }
+            // SignUp Screen
+            composable(Screen.SignUp.route) {
+                SignUpScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    navController = navController,
+                    onNavigateToOnBoarding = {
+                        navController.navigate(Screen.OnBoarding.route) {
+                            popUpTo(Screen.SignUp.route) { inclusive = false }
+                        }
+                    }
+                )
+            }
+            // UserProfile Screen
+            composable(Screen.UserProfile.route) {
+                UserProfileScreen(modifier = Modifier.fillMaxSize())
+            }
         }
     }
 }
+
+
+

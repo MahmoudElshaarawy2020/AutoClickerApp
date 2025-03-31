@@ -44,7 +44,7 @@ fun CustomTextField(
     unfocusedBorderColor: Color,
     cursorColor: Color,
     isFocused: Boolean,
-    backgroundColor: Color = colorResource(id = R.color.baby_blue),
+    backgroundColor: Color = colorResource(id = R.color.white),
     maxLines: Int = 1,
     isPassword: Boolean = false,
     isEncrypted: Boolean = false,

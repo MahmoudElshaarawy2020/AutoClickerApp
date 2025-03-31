@@ -45,8 +45,8 @@ import kotlin.math.roundToInt
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
-    onNavigateToLogin: () -> Unit = {},
-    onRoleClickBoarding: (Int) -> Unit = {},
+    onNavigateToSignUp: () -> Unit = {},
+    onLoginClick: (Int) -> Unit = {},
     navController: NavHostController
 ) {
 
@@ -78,7 +78,7 @@ fun OnBoardingScreen(
         IdentityDialog(
             onDismiss = { showDialog = false },
             onRoleClick = { role ->
-                onRoleClickBoarding(role)
+                onLoginClick(role)
             }
         )
     }
@@ -90,36 +90,39 @@ fun OnBoardingScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            text = "Welcome to AutoClicker App",
+            modifier = modifier
+                .padding(horizontal = 8.dp),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 2,
+            textAlign = TextAlign.Center,
+            color = colorResource(id = R.color.first_blue),
+            lineHeight = 28.sp
+        )
+
+        Spacer(modifier = Modifier.size(30.dp))
+
         Image(
             modifier = modifier
                 .padding(top = 30.dp)
-                .size(width = 190.dp, height = 50.dp)
-                .weight(0.1f)
+                .size(width = 200.dp, height = 200.dp)
                 .offset { IntOffset(0, offsetY.roundToInt()) },
             painter = painterResource(id = R.drawable.left_click),
             contentDescription = null
         )
-        Spacer(modifier = modifier.size(height = 50.dp, width = 0.dp))
 
-        Text(
-            text = "Welcome to AutoClicker App",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.first_blue),
-            lineHeight = 28.sp
-        )
-        Spacer(modifier = modifier.size(height = 30.dp, width = 0.dp))
+        Spacer(modifier = Modifier.size(150.dp))
 
         Row(
             modifier = modifier
-                .fillMaxWidth()
-                .weight(0.1f),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                modifier = modifier
-                    .size(width = 160.dp, height = 50.dp),
-                onClick = { onNavigateToLogin() },
+                modifier = Modifier.size(width = 160.dp, height = 50.dp),
+                onClick = { showDialog = true  },
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(colorResource(id = R.color.first_blue))
             ) {
                 Text(
@@ -136,9 +139,8 @@ fun OnBoardingScreen(
             Spacer(modifier = Modifier.size(8.dp))
 
             Button(
-                modifier = modifier
-                    .size(width = 160.dp, height = 50.dp),
-                onClick = { showDialog = true },
+                modifier = Modifier.size(width = 160.dp, height = 50.dp),
+                onClick = { onNavigateToSignUp() },
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(colorResource(id = R.color.teal_700))
             ) {
                 Text(
@@ -153,4 +155,5 @@ fun OnBoardingScreen(
             }
         }
     }
+
 }

@@ -67,19 +67,17 @@ fun IdentityDialog(
                         onDismiss()
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 220.dp, height = 120.dp),
+                        .fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_500))
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_200))
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(8.dp)
-                            .size(width = 220.dp, height = 120.dp),
+                            .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text("Client", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text("Admin", color = Color.Black, fontWeight = FontWeight.Bold)
                     }
 
                 }
@@ -100,7 +98,7 @@ fun IdentityDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text("Contractor", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text("User", color = Color.Black, fontWeight = FontWeight.Bold)
                     }
                 }
 

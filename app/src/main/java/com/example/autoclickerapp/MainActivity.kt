@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 var startDestination by remember { mutableStateOf(Screen.OnBoarding.route) }
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    OnBoardingScreen(Modifier,{},{},navController)
+                    AppNavigation(startDestination, navController)
                 }
             }
         }
