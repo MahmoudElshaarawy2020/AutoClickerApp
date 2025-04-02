@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.autoclickerapp" />
+                  <option name="mobileSdkAppId" value="1:157249643167:android:7c78b9cbeeefcd84b5b8aa" />
+                  <option name="projectId" value="autoclickerapp-47b35" />
+                  <option name="projectNumber" value="157249643167" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

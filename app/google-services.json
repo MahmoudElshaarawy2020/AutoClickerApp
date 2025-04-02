@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157249643167",
+    "project_id": "autoclickerapp-47b35",
+    "storage_bucket": "autoclickerapp-47b35.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157249643167:android:7c78b9cbeeefcd84b5b8aa",
+        "android_client_info": {
+          "package_name": "com.example.autoclickerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3fn_mX_RR5MEgGsjMDOhqDt9RpPENKL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

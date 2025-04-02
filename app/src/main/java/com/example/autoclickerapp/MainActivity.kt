@@ -21,7 +21,9 @@ import com.example.autoclickerapp.navigation.app_navigation.AppNavigation
 import com.example.autoclickerapp.view.on_boarding.OnBoardingScreen
 import com.example.autoclickerapp.view.ui.theme.AutoClickerAppTheme
 import com.example.autoclickerapp.view.user_view.stopNotificationService
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

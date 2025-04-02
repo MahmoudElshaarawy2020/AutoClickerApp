@@ -1,8 +1,8 @@
 package com.example.autoclickerapp.model.utils
 
-sealed class Result<T>(val data: T? = null, val message: String? = null) {
-    class Success<T>(data: T) : Result<T>(data)
-    class Loading<T>(data: T? = null) : Result<T>(data)
-    class Error<T>(message: String, data: T? = null) : Result<T>(data, message)
-    class Idle<T> : Result<T>()
+sealed class UiState<out T> {
+    data object Loading : UiState<Nothing>()
+    data class Success<out T>(val data: T?) : UiState<T>()
+    data class Error(val message: String) : UiState<Nothing>()
+    data object Empty : UiState<Nothing>()
 }
