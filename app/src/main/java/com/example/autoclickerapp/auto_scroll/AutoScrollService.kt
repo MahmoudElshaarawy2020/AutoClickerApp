@@ -15,11 +15,9 @@ class AutoScrollService : AccessibilityService() {
     private val handler = CoroutineScope(Dispatchers.Main)
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        // لا حاجة لمعالجة الأحداث في هذه الحالة
     }
 
     override fun onInterrupt() {
-        // تنفيذ أي عملية عند انقطاع الخدمة
     }
 
 //    override fun onServiceConnected() {
