@@ -1,5 +1,6 @@
 package com.example.autoclickerapp.view.user_view
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,16 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,31 +35,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.autoclickerapp.R
+import com.example.autoclickerapp.data.DataStoreManager
+import com.example.autoclickerapp.model.utils.UiState
+import com.example.autoclickerapp.navigation.screen.Screen
 import com.example.autoclickerapp.view.utils.CustomTextField
+import com.example.autoclickerapp.viewmodel.AuthState
+import com.example.autoclickerapp.viewmodel.AuthViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    onNavigateToOnBoarding: () -> Unit = {}
+    onNavigateToOnBoarding: () -> Unit = {},
+    viewModel: AuthViewModel = hiltViewModel(),
+    dataStoreManager: DataStoreManager = DataStoreManager(LocalContext.current)
 ) {
-    println("SignUpScreen is being displayed!") // تحقق مما إذا كانت الشاشة تُعرض
-
-
     val systemUiController = rememberSystemUiController()
-
     val context = LocalContext.current
     val backgroundColor = colorResource(R.color.light_green)
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = backgroundColor,
-            darkIcons = true
-        )
-    }
-
 
     var userName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -61,14 +64,29 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
-    Divider(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 24.dp, top = 16.dp, end = 24.dp),
-        thickness = 1.dp
-    )
-    Spacer(modifier = modifier.size(height = 50.dp, width = 0.dp))
+    // Collect UI state from ViewModel
+    val authState = viewModel.authState.observeAsState()
 
+    LaunchedEffect(authState.value) {
+        when (authState.value) {
+            is AuthState.Authenticated ->{
+                dataStoreManager.saveUserData(userName, email, phoneNumber)
+                navController.navigate(Screen.Home.route)
+            }
+            is AuthState.Error -> Toast.makeText(
+                context,
+                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT
+            ).show()
+
+            else -> Unit
+        }
+    }
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = backgroundColor,
+            darkIcons = true
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -79,7 +97,6 @@ fun SignUpScreen(
         verticalArrangement = Arrangement.Center
     ) {
         item {
-
             Text(
                 text = "Create Your Account",
                 fontSize = 28.sp,
@@ -98,6 +115,7 @@ fun SignUpScreen(
             )
         }
 
+        // User Name Field
         item {
             Text(
                 modifier = modifier
@@ -121,6 +139,7 @@ fun SignUpScreen(
             )
         }
 
+        // Email Field
         item {
             Text(
                 modifier = modifier
@@ -145,6 +164,7 @@ fun SignUpScreen(
             )
         }
 
+        // Phone Number Field
         item {
             Text(
                 modifier = modifier
@@ -169,6 +189,7 @@ fun SignUpScreen(
             )
         }
 
+        // Password Field
         item {
             Text(
                 modifier = modifier
@@ -194,6 +215,7 @@ fun SignUpScreen(
             )
         }
 
+        // Confirm Password Field
         item {
             Text(
                 modifier = modifier
@@ -218,6 +240,7 @@ fun SignUpScreen(
             )
         }
 
+        // Sign Up Button
         item {
             Spacer(modifier = modifier.size(height = 24.dp, width = 0.dp))
             Button(
@@ -225,20 +248,37 @@ fun SignUpScreen(
                     .padding(horizontal = 80.dp)
                     .height(50.dp)
                     .width(150.dp),
-                onClick = {},
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(colorResource(id = R.color.first_blue))
+                onClick = {
+                    if (
+                        email.isNotBlank() &&
+                        password.isNotBlank() &&
+                        confirmPassword.isNotBlank() &&
+                        userName.isNotBlank() &&
+                                phoneNumber.isNotBlank()
+                    ) {
+                        viewModel.signUp(email, password)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Please fill all fields",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(colorResource(id = R.color.first_blue))
             ) {
-                Text(
-                    text = "Sign Up",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 2,
-                    textAlign = TextAlign.Center,
-                    color = colorResource(id = R.color.white),
-                    lineHeight = 25.sp
-                )
+                    Text(
+                        text = "Sign Up",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 2,
+                        textAlign = TextAlign.Center,
+                        color = colorResource(id = R.color.white),
+                        lineHeight = 25.sp
+                    )
 
             }
+
             Spacer(modifier = modifier.size(height = 8.dp, width = 0.dp))
             Text(
                 modifier = modifier.clickable {
@@ -252,12 +292,7 @@ fun SignUpScreen(
                 textAlign = TextAlign.Center,
                 color = colorResource(id = R.color.first_blue),
             )
-
             Spacer(modifier = modifier.size(height = 50.dp, width = 0.dp))
-
         }
     }
-
 }
-
-

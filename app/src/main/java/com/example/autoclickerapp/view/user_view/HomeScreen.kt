@@ -16,13 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.autoclickerapp.R
 import com.example.autoclickerapp.notification.NotificationService
+import com.example.autoclickerapp.viewmodel.AuthViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier,navController: NavHostController, role: Int) {
+fun HomeScreen(
+    modifier: Modifier = Modifier, navController: NavHostController, role: Int,
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val systemUiController = rememberSystemUiController()
 
     val context = LocalContext.current

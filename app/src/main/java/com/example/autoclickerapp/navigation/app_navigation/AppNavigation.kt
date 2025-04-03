@@ -21,12 +21,14 @@ import com.example.autoclickerapp.view.on_boarding.OnBoardingScreen
 import com.example.autoclickerapp.view.user_view.SignUpScreen
 import com.example.autoclickerapp.view.user_view.UserProfileScreen
 import com.example.autoclickerapp.view.user_view.HomeScreen
+import com.example.autoclickerapp.viewmodel.AuthViewModel
 
 
 @Composable
 fun AppNavigation(
     startDestination: String,
     navController: NavHostController,
+    authViewModel: AuthViewModel
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
@@ -91,21 +93,15 @@ fun AppNavigation(
                     onNavigateToOnBoarding = {
                         navController.navigate(Screen.OnBoarding.route)
                     },
-                    onLoginClick = { role ->
-                        // Navigate to HomeScreen with the role parameter
-                        navController.navigate(Screen.Home.chooseRole(role)) {
-                            // Optionally clear the back stack if necessary
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }
+                    viewModel = authViewModel
+
                 )
             }
 
             // Home Screen
             composable("home_screen/{role}") { backStackEntry ->
                 val role = backStackEntry.arguments?.getString("role")?.toIntOrNull() ?: 2
-                HomeScreen(navController = navController, role = role)
+                HomeScreen(navController = navController, role = role,authViewModel = authViewModel)
             }
             // OnBoarding Screen
             composable(Screen.OnBoarding.route) {
@@ -115,6 +111,7 @@ fun AppNavigation(
                     onLoginClick = { role ->
                         navController.navigate(Screen.Login.chooseRole(role))
                     },
+                    authViewModel = authViewModel,
                     onNavigateToSignUp = {
                         Log.d("Navigation", "Navigating to SignUp")
                         navController.navigate(Screen.SignUp.route) {
@@ -132,12 +129,15 @@ fun AppNavigation(
                         navController.navigate(Screen.OnBoarding.route) {
                             popUpTo(Screen.SignUp.route) { inclusive = false }
                         }
-                    }
+                    },
+                    authViewModel
                 )
             }
             // UserProfile Screen
             composable(Screen.UserProfile.route) {
-                UserProfileScreen(modifier = Modifier.fillMaxSize())
+                UserProfileScreen(modifier = Modifier.fillMaxSize(),
+                    authViewModel = authViewModel,
+                    navController = navController)
             }
         }
     }

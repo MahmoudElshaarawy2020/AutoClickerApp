@@ -8,6 +8,12 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
+buildscript {
+    dependencies {
+        classpath ("com.google.gms:google-services:4.4.1")
+        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
+    }
+}
 android {
     namespace = "com.example.autoclickerapp"
     compileSdk = 35
@@ -56,6 +62,8 @@ dependencies {
     implementation(libs.androidx.monitor)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.uiautomator)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,7 +72,22 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    // Update Firebase BOM to latest version
+
+   implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+
+// Firebase Auth & Firestore
+    implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.google.firebase.firestore.ktx)
+    implementation(libs.firebase.analytics.ktx)
+
+// Google Play Services (Latest Versions)
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.google.android.gms:play-services-base:18.4.0")
+    implementation("com.google.android.gms:play-services-identity:18.1.0")
+
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")
 
     // Dagger Hilt

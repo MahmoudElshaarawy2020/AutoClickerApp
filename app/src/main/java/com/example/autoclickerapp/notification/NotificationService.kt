@@ -62,19 +62,19 @@ class NotificationService : Service() {
             .build()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            "START_SCROLLING" -> {
-                sendBroadcast(AutoScrollService.ACTION_START_SCROLL)  // Send broadcast
-                Toast.makeText(this, "Scrolling Started", Toast.LENGTH_SHORT).show()
-            }
-            "STOP_SCROLLING" -> {
-                sendBroadcast(AutoScrollService.ACTION_STOP_SCROLL)  // Send broadcast
-                Toast.makeText(this, "Scrolling Stopped", Toast.LENGTH_SHORT).show()
-            }
-        }
-        return START_STICKY
-    }
+//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        when (intent?.action) {
+//            "START_SCROLLING" -> {
+//                sendBroadcast(AutoScrollService.ACTION_START_SCROLL)  // Send broadcast
+//                Toast.makeText(this, "Scrolling Started", Toast.LENGTH_SHORT).show()
+//            }
+//            "STOP_SCROLLING" -> {
+//                sendBroadcast(AutoScrollService.ACTION_STOP_SCROLL)  // Send broadcast
+//                Toast.makeText(this, "Scrolling Stopped", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//        return START_STICKY
+//    }
 
 
 
